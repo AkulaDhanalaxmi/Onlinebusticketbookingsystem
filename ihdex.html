@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bus Ticket Booking</title>
+</head>
+<body>
+
+  <h1>Online Bus Ticket Booking</h1>
+
+  <h2>Search Bus</h2>
+  From:
+  <select id="from">
+    <option>Warangal</option>
+    <option>Hyderabad</option>
+    <option>Vijayawada</option>
+  </select>
+
+  To:
+  <select id="to">
+    <option>Hyderabad</option>
+    <option>Warangal</option>
+    <option>Vijayawada</option>
+  </select>
+
+  Date:
+  <input type="date" id="date">
+  <button onclick="searchBus()">Search</button>
+
+  <p id="busInfo"></p>
+
+  <h2>Book Ticket</h2>
+  Name: <input type="text" id="name"><br><br>
+  Seat Number (1-10):
+  <input type="number" id="seat" min="1" max="10"><br><br>
+  <button onclick="bookTicket()">Book Ticket</button>
+
+  <p id="message"></p>
+
+  <h2>My Bookings</h2>
+  <ul id="bookingList"></ul>
+
+  <script>
+    var price = 200;
+    var bookings = [];
+
+    function searchBus() {
+      var from = document.getElementById("from").value;
+      var to = document.getElementById("to").value;
+      var date = document.getElementById("date").value;
+
+      if (from == to) {
+        document.getElementById("busInfo").innerHTML = "Source and destination cannot be same.";
+      } else {
+        document.getElementById("busInfo").innerHTML =
+          "Bus found: " + from + " to " + to + " | Date: " + date + " | Price: Rs." + price;
+      }
+    }
+
+    function bookTicket() {
+      var name = document.getElementById("name").value;
+      var seat = document.getElementById("seat").value;
+
+      if (name == "" || seat == "") {
+        document.getElementById("message").innerHTML = "Please enter name and seat number.";
+        return;
+      }
+
+      for (var i = 0; i < bookings.length; i++) {
+        if (bookings[i].seat == seat) {
+          document.getElementById("message").innerHTML = "Seat " + seat + " is already booked.";
+          return;
+        }
+      }
+
+      bookings.push({ name: name, seat: seat });
+      document.getElementById("message").innerHTML = "Ticket booked for " + name + ", seat " + seat + ".";
+      showBookings();
+    }
+
+    function cancelTicket(index) {
+      bookings.splice(index, 1);
+      showBookings();
+      document.getElementById("message").innerHTML = "Ticket cancelled.";
+    }
+
+    function showBookings() {
+      var list = document.getElementById("bookingList");
+      list.innerHTML = "";
+      for (var i = 0; i < bookings.length; i++) {
+        list.innerHTML += "<li>" + bookings[i].name + " - Seat " + bookings[i].seat +
+          " <button onclick='cancelTicket(" + i + ")'>Cancel</button></li>";
+      }
+    }
+  </script>
+
+</body>
+</html>
